@@ -1,23 +1,30 @@
-import logo from './logo.svg';
-import './App.css';
+import { Route, Routes, useNavigate } from "react-router-dom";
+import "./App.css";
+import HomePage from "./Components/HomePage/HomePage";
+import Authentication from "./Components/Authentication/Authentication";
+import { useDispatch, useSelector } from "react-redux";
+import { useEffect } from "react";
+import { getUserProfile } from "./Store/Auth/Action";
 
 function App() {
+  const jwt = localStorage.getItem("jwt");
+  const { auth } = useSelector((store) => store);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  useEffect(() => {
+    if (jwt) {
+      // dispatch(getUserProfile(jwt));
+      navigate("/");
+    }
+  }, [auth.jwt]);
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="">
+      <Routes>
+        <Route
+          path="/*"
+          element={auth.user ? <HomePage /> : <Authentication />}
+        />
+      </Routes>
     </div>
   );
 }
